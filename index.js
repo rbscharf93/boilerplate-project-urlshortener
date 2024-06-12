@@ -27,8 +27,11 @@ app.get('/api/hello', function(req, res) {
 
 app.get('/api/shorturl/:shorturl', function(req, res) {
   const shorturl = shorturls.find(shorturl => shorturl.shortPath == req.params.shorturl);
-  console.log(shorturl.url);
-  res.redirect(shorturl.url);
+  if (shorturl) {
+    res.redirect(shorturl.url);
+  } else {
+    res.status(404);
+  }
 });
 
 app.post('/api/shorturl', function(req, res) {
@@ -48,6 +51,10 @@ app.post('/api/shorturl', function(req, res) {
         shorturls.push({url: url, shortPath: shorturls.length + 1});
         shortPath = shorturls.length;
       }
+      console.log({
+        original_url: url,
+        short_url: shortPath
+      })
       res.json({
         original_url: url,
         short_url: shortPath
